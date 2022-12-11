@@ -3,6 +3,6 @@
 
 **C++**–code developed for one-dimensional P1 finite element approximation. The approximation is used for evaluating an effective elastic energy for a one-dimensional surrogate model regarding a cylinder geometry. 
 
-The Code uses the open source software package on cubic spline interpolation in <b> C++ </b> from <a href ="https://kluge.in-chemnitz.de/opensource/spline/">here</a>
+The Code uses the open source software package on cubic spline interpolation in <b> C++ </b> from <a href ="https://kluge.in-chemnitz.de/opensource/spline/">here</a> which is used under the terms of the GNU General Public License, Version 2. Copyright (C) 2011, 2014, 2016, 2021 Tino Kluge.
 
 For more details on the usage of the code please check the **Readme.txt** file.
