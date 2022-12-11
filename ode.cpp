@@ -3,6 +3,9 @@
 // The following code uses the open source C++-package on cubic spline interpolation included in the class
 // spline.h which is made available on: https://kluge.in-chemnitz.de/opensource/spline/
 
+/*
+Copyright (C) 2022 Steve Wolff-Vorbeck (steve.wolff-vorbeck at mathematik.uni-freibrg.de)
+*/
 
 #include <iostream>
 #include <fstream>
