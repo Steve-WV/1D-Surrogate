@@ -27,16 +27,6 @@ endif(COMPILER_OPT_OFAST_SUPPORTED)
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-# BLAS
-find_package(BLAS REQUIRED)
-include_directories(${BLAS_INCLUDE_DIR})
-link_libraries(${BLAS_LIBRARIES})
-
-# LAPACKE
-find_package(LAPACK REQUIRED)
-include_directories(${LAPACK_INCLUDE_DIR})
-link_libraries(${LAPACK_LIBRARIES})
-
 # Boost
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
