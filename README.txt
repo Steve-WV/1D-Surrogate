@@ -6,8 +6,6 @@ REQUIREMENTS:
  - OpenMP libraries
  - The linear algebra library Eigen
  - The Boost libraries
- - The Lapack libraries
- - The Blas libraries
  
  
 Further the code uses the open source C++-package on cubic spline interpolation included in the class spline.h which is from:
