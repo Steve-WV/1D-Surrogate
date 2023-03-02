@@ -30,15 +30,12 @@ using namespace std;
 #include <Eigen/Sparse>
 #include <Eigen/IterativeLinearSolvers>
 
-
 // Generators for the distributions 
-		std::default_random_engine generator_norm1;
-		std::default_random_engine generator_norm2;
+std::default_random_engine generator_norm1;
+std::default_random_engine generator_norm2;
 
 // generator for standard normal distribution
- 	std::normal_distribution<double> distribution_norm1(0.0,1.0);
-
-
+ std::normal_distribution<double> distribution_norm1(0.0,1.0);
 
 const double E=80.05863;
 const double Schub=30.8;
@@ -49,7 +46,6 @@ const double k0=0.0;
 //const double kl=0.5;
 const double kl=0.0;
 
-
 inline double sqr(double s){ 
 
 	return s*s;
@@ -59,19 +55,14 @@ inline double cub(double s){
 
 	return s*s*s;
 }
-
-	
 	
 void ODESystem::CholeskyLoop () {
 
 std::vector<T> vals_ktl1, vals_ktl2;
 double x1,y1,z1;
 double x2,y2,z2;
-
-
 KTL_new1=Mat(L,L);
 KTL_new2=Mat(L,L);
-
 double b1= L;
 
 	for (int i=0; i < L; ++i) {
@@ -81,16 +72,16 @@ double b1= L;
 					
 				for (int j=0;j < L; ++j) {
 				
-				double c=j;
-				z2= c/b1;
+					double c=j;
+					z2= c/b1;
 					
-				double ktl1 = exp(-(abs(z1-z2)/l_c1));
-				double ktl2 = exp(-(abs(z1-z2)/l_c2));
+					double ktl1 = exp(-(abs(z1-z2)/l_c1));
+					double ktl2 = exp(-(abs(z1-z2)/l_c2));
 				
-				KTL_new1(i,j)=ktl1;
-				KTL_new2(i,j)=ktl2;
+					KTL_new1(i,j)=ktl1;
+					KTL_new2(i,j)=ktl2;
 
-							}											
+					}											
 
 				}
 		
@@ -118,7 +109,7 @@ void ODESystem::Perform_KTL() {
 				Y.push_back(KTL_Chol2[i]);
 				Knots.push_back((b3/b22));
 				
-					}
+			}
 	
 		X1 = Vec::Zero(L-2);
 	 	X2 = Vec::Zero(L-2);
@@ -150,11 +141,10 @@ void ODESystem::Perform_KTL() {
     			dXM2[i]+=scal2*s2.deriv(1,((b3+0.5)/b1));
     			dMU[i]+=1.0;
     	
- 				      }
+ 		}
 
 }
 	
-
 // Generate random numbers V^i for computing density variation and geometric perturbation
 // via L*V^i using Cholesk decomposition	
 	void ODESystem::Prep_Norm() {
@@ -174,9 +164,8 @@ void ODESystem::Perform_KTL() {
 					C_norm1[i]+= trans1; 
 					C_norm2[i]+= trans2;
 				
-						   }
+		}
 }
-
 
 void ODESystem::KLoop_det ( SpMat* th_k1) {
 	
@@ -229,10 +218,6 @@ void ODESystem::PrepK_det() {
 
 }
 
-
-
-
-
 void ODESystem::KLoop ( SpMat* th_k1, SpMat* th_k2, SpMat* th_k3,SpMat* th_k4,SpMat* th_k5) {
 	
 	std::vector<T> vals_k1,vals_k2,vals_k3,vals_k4,vals_k5,vals_k6;
@@ -245,9 +230,7 @@ void ODESystem::KLoop ( SpMat* th_k1, SpMat* th_k2, SpMat* th_k3,SpMat* th_k4,Sp
 				double k11=0.0;
 				double k12=0.0;
 				double k13=0.0;
-				
-				
-				//k1+=((E+MU[i])*2*b1);
+	
 				k1+= (dMU[i]*b1+dMU[i+1]*b1);
 				k2-=dMU[i]*b1;
 				k3-=dMU[i+1]*b1;
@@ -290,15 +273,13 @@ void ODESystem::KLoop ( SpMat* th_k1, SpMat* th_k2, SpMat* th_k3,SpMat* th_k4,Sp
 		
 	vals_k1.push_back( T(0, 0, dMU[0]*b1+dMU[1]*b1 ) );
 	vals_k1.push_back( T(0, 1, -dMU[1]*b1) );
-	vals_k1.push_back( T(L-3, L-3, dMU[L-3]*b1+dMU[L-2]*b1)  );
+	vals_k1.push_back( T(L-3, L-3, dMU[L-3]*b1+dMU[L-2]*b1) );
 	vals_k1.push_back( T(L-3, L-4, -dMU[L-3]*b1) );
-	
 	
 	vals_k2.push_back( T((L-2),(L-2), dMU[0]*b1+dMU[1]*b1) );
 	vals_k2.push_back( T((L-2),1+(L-2), -dMU[1]*b1) );
 	vals_k2.push_back( T((L-3)+(L-2), L-3+(L-2), dMU[L-3]*b1+dMU[L-2]*b1) );
 	vals_k2.push_back( T((L-3)+(L-2), L-4+(L-2), -dMU[L-3]*b1) );
-	
 	
 	vals_k3.push_back( T(2*(L-2), 2*(L-2), dMU[0]*b1+dMU[1]*b1) );
 	vals_k3.push_back( T(2*(L-2),1+2*(L-2), -dMU[1]*b1) );
@@ -325,7 +306,6 @@ void ODESystem::KLoop ( SpMat* th_k1, SpMat* th_k2, SpMat* th_k3,SpMat* th_k4,Sp
 	vals_k4.push_back(T(3*(L-2),4*(L-2)+2, (1/b1)));
 	vals_k4.push_back(T(4*(L-2)-1,4*(L-2)+2, (1/b1)));	
 	
-
 	(*th_k1).setFromTriplets( vals_k1.begin(), vals_k1.end() );
 	(*th_k2).setFromTriplets( vals_k2.begin(), vals_k2.end() );
 	(*th_k3).setFromTriplets( vals_k3.begin(), vals_k3.end() );
@@ -375,10 +355,7 @@ void ODESystem::PrepK() {
 		K5 += th_k5[j];
 		L1 += th_k4[j];
 	}
-
 }
-
-
 
 void ODESystem::PerturbeLoop(SpMat* th_k, Vec* th_b) { 
 
@@ -402,7 +379,6 @@ double b1= (L-1);
 				double ky2=0.0;
 				double ky3=0.0;
 				
-				
 				double kxy=0.0;
 				double kxy1=0.0;
 				double kxy2=0.0;
@@ -416,8 +392,6 @@ double b1= (L-1);
 				double ky =0.0;
 				double kp=0.0;
 				
-				
-
 				// u' in perturbe matrix
 				k11x+=0.5*(dMU[i]*dXM2[i]-dMU[i+1]*dXM2[i+1]);
 				k12x+=0.5*dMU[i]*dXM2[i];
@@ -427,7 +401,6 @@ double b1= (L-1);
 				k12y+=0.5*dMU[i]*dXM1[i];
 				k13y-=0.5*dMU[i+1]*dXM1[i+1];
 
-       
 				vals_p.push_back( T(i+(L-2), i, -k11x) );
 				vals_p.push_back( T(i+(L-2), i-1, -k12x) );
 				vals_p.push_back( T(i+(L-2), i+1, -k13x) );
@@ -503,8 +476,7 @@ double b1= (L-1);
 				(*th_b)[(L-2)+i]+= (1.0+a_sum)*(ky*(1/b1));
 				(*th_b)[2*(L-2)+i]-= (1.0+a_sum)*(kx*(1/b1));		
 				(*th_b)[3*(L-2)+i]-= (kl-k0)*kp;
-							
-							
+									
 					}
 
 				// u' in perturbe matrix
@@ -590,10 +562,8 @@ double b1= (L-1);
 			(*th_b)[2*(L-2)+(L-3)]-= (kx2*(1/b1));
 			(*th_b)[3*(L-2)]-= ((kl-k0)*kp1);
 			(*th_b)[3*(L-2)+(L-3)]-= ((kl-k0)*kp2);
-	
    
-	(*th_k).setFromTriplets( vals_p.begin(), vals_p.end() );
-	
+	(*th_k).setFromTriplets( vals_p.begin(), vals_p.end() );	
 
 }
 
@@ -605,6 +575,7 @@ void ODESystem::PrepPerturbe() {
 	std::vector<Vec> th_b;
 
 	for ( int j = 0; j < numThreads; ++j ) {
+		
 		th_k.push_back( SpMat(4*(L-2)+3, 4*(L-2)+3) );
 		//th_k.push_back( SpMat(3*(L-2), 3*(L-2)) );
 		th_b.push_back( Vec() );
@@ -642,11 +613,8 @@ void ODESystem::Solve(){
 m_size=20;
 L=5*m_size;
 double m_size2=m_size;
-
 l_c1=1/m_size2;
 l_c2=1/m_size2;
- 
-
 sigma_new1=0.3;
 sigma_new2=0.3;
 
@@ -663,14 +631,13 @@ for (int i=1; i<2; ++i){
 	  	//KTL_Cholnew2= lltOfA.matrixL();
 
 
-		// Calculating Number samples of deformations
-		int Numb = 500;	
+//  Number sample of deformations
+ int Numb = 500;	
  
 for (int i =1; i<=Numb; ++i){
 	
 Prep_Norm();
 Perform_KTL();
-
 PrepK();
 PrepK_det();
 PrepPerturbe();
@@ -688,7 +655,7 @@ std::cerr << "done." << std::endl;
 CalcE();
 std::cerr<< "Energie:" << 0.5*energy1 << std::endl;
 
-			}	
+	}	
 }
 
 // compute elastic energy
@@ -710,13 +677,12 @@ void ODESystem::CalcE() {
 	
 	for (int i=0; i<L-3; ++i) {
 	
-		th1+=dMU[i+1]*sqr(0.5*dXM1[i+1]*(Z[2*(L-2)+i]+Z[2*(L-2)+i+1])-0.5*dXM2[i+1]*(Z[(L-2)+i]+Z[(L-2)+i+1])+((1+a_sum)+dMU[i+1]*b2*(Z[i+1]-Z[i])))*(1/b2);
-		th2+= (2.0*(kl-k0)*dMU[i+1]*(Z[3*(L-2)+i+1]-Z[3*(L-2)+i])*b2*(1/b2)+sqr(kl-k0)*dMU[i+1]*(1/b2));
+			th1+=dMU[i+1]*sqr(0.5*dXM1[i+1]*(Z[2*(L-2)+i]+Z[2*(L-2)+i+1])-0.5*dXM2[i+1]*(Z[(L-2)+i]+Z[(L-2)+i+1])+((1+a_sum)+dMU[i+1]*b2*(Z[i+1]-Z[i])))*(1/b2);
+			th2+= (2.0*(kl-k0)*dMU[i+1]*(Z[3*(L-2)+i+1]-Z[3*(L-2)+i])*b2*(1/b2)+sqr(kl-k0)*dMU[i+1]*(1/b2));
 		
-				  }
+		}
 				  
 	energy1+= E*pi*th1+(E/(4.0))*pi*(Z.dot(K2*Z)+Z.dot(K3*Z));
-
 }
 
 
